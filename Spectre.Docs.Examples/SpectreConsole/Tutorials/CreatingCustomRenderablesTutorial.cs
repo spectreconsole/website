@@ -23,7 +23,7 @@ public class CreatingCustomRenderablesTutorial : BaseSample
         table.AddRow(new Pill("Error", PillType.Error), new Text("Database connection failed"));
         table.AddRow(new Pill("Info", PillType.Info), new Text("Scheduled maintenance at 2:00 AM"));
 
-        console.Write(table);
+        AnsiConsole.Write(table);  // minimal error on this line
     }
 
     /// <summary>Creates a basic Pill class that implements IRenderable.</summary>
