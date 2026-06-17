@@ -44,6 +44,7 @@ builder.Services.AddPennington(penn =>
     penn.SiteTitle = "Spectre.Console Documentation";
     penn.SiteDescription = "Beautiful console applications with Spectre.Console";
     penn.ContentRootPath = "Content";
+    penn.SiteProjection.ContentSelector = "article";
 
     penn.AddMarkdownContent<SpectreConsoleFrontMatter>(md =>
     {
@@ -64,6 +65,8 @@ builder.Services.AddPennington(penn =>
         md.ContentPath = "Content/blog";
         md.BasePageUrl = "/blog";
     });
+
+    penn.AddLlmsTxt();
 });
 
 // Reflection-backed API metadata providers, one keyed registration per reference area.
