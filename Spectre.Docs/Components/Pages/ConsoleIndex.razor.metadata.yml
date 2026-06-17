@@ -1,0 +1,4 @@
+# Metadata sidecar for the Razor landing page at "/console/" so it projects a content record
+# and gets a social card + og:image / description meta tags.
+title: Spectre.Console Documentation
+description: "Create beautiful, cross-platform console applications with Spectre.Console - tables, progress bars, charts, and rich text formatting for .NET"

@@ -6,11 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pennington" Version="0.1.3" />
-    <PackageReference Include="Pennington.ApiMetadata.Reflection" Version="0.1.3" />
-    <PackageReference Include="Pennington.MonorailCss" Version="0.1.3" />
-    <PackageReference Include="Pennington.UI" Version="0.1.3" />
-    <PackageReference Include="Pennington.TreeSitter" Version="0.1.3" />
+    <PackageReference Include="Ashcroft" Version="0.5.0" />
+    <!-- Ashcroft renders social cards with SkiaSharp/HarfBuzz. The base packages ship no Linux
+         native binaries, so these are required for the static build on the ubuntu-latest GitHub
+         Pages runner. Inert on Windows/macOS (native assets only apply to the linux RID). The
+         NoDependencies SkiaSharp variant avoids libfontconfig: Ashcroft bundles its own fonts. -->
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.148.0-rc.1.2" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.0-rc.1.2" />
+    <PackageReference Include="Pennington" Version="0.1.4" />
+    <PackageReference Include="Pennington.ApiMetadata.Reflection" Version="0.1.4" />
+    <PackageReference Include="Pennington.MonorailCss" Version="0.1.4" />
+    <PackageReference Include="Pennington.UI" Version="0.1.4" />
+    <PackageReference Include="Pennington.TreeSitter" Version="0.1.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="Spectre.Console" Version="0.57.0" />
     <PackageReference Include="Spectre.Console.Cli" Version="1.0.0-alpha.0.11" />

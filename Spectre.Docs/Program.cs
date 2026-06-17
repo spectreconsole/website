@@ -1,7 +1,11 @@
+using System.Reflection;
+using Ashcroft;
 using Mdazor;
 using Pennington.ApiMetadata.Reflection;
 using Pennington.Infrastructure;
+using Pennington.LlmsTxt;
 using Pennington.MonorailCss;
+using Pennington.SocialCards;
 using Pennington.TreeSitter;
 using Pennington.UI.Components;
 using Spectre.Console;
@@ -9,11 +13,18 @@ using Spectre.Docs.Components;
 using Spectre.Docs.Components.Reference;
 using Spectre.Docs.Components.Shared;
 using Spectre.Docs.Services;
+using Spectre.Docs.SocialCardAssets;
 using ColorName = Pennington.MonorailCss.ColorName;
 using IContentService = Pennington.Content.IContentService;
 using IContentRenderer = Pennington.Pipeline.IContentRenderer;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// The documented subject's version for the /llms.txt front door. Resolved from the referenced
+// Spectre.Console assembly so it tracks package bumps; the +<sha> SourceLink suffix is stripped.
+var spectreVersion = typeof(AnsiConsole).Assembly
+    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+    .InformationalVersion?.Split('+', 2)[0];
 
 builder.Services.AddRazorComponents();
 
@@ -43,8 +54,23 @@ builder.Services.AddPennington(penn =>
 {
     penn.SiteTitle = "Spectre.Console Documentation";
     penn.SiteDescription = "Beautiful console applications with Spectre.Console";
+    penn.SiteVersion = spectreVersion; // → llms.txt `version:` (replaces penningtonVersion:)
+    penn.CanonicalBaseUrl = "https://spectreconsole.net";
     penn.ContentRootPath = "Content";
     penn.SiteProjection.ContentSelector = "article";
+
+    // OpenGraph / Twitter social cards. Pennington discovers one card per page, auto-maps the
+    // /social-cards/{**slug}.png route (via UsePennington), and emits the og:image / twitter:image
+    // meta tags; Ashcroft does the drawing — the branded PNG as the background with the page
+    // title set in JetBrains Mono, anchored bottom-left clear of the watermark on the right.
+    penn.SocialCards = new SocialCardOptions
+    {
+        Render = (request, sp, _) =>
+        {
+            var environment = sp.GetRequiredService<IWebHostEnvironment>();
+            return SocialCardGenerator.Build(request, environment);
+        },
+    };
 
     penn.AddMarkdownContent<SpectreConsoleFrontMatter>(md =>
     {
@@ -83,6 +109,13 @@ builder.Services.AddApiMetadataFromCompiledAssembly("console", opts =>
 builder.Services.AddApiMetadataFromCompiledAssembly("cli", opts =>
     opts.FromPackageReference("Spectre.Console.Cli"));
 
+builder.Services.AddLlmsSubtree(new LlmsSubtree(
+    "/cli/reference/api/", "CLI reference",
+    "Spectre.Console.Cli — command, configuration, and settings types."));
+builder.Services.AddLlmsSubtree(new LlmsSubtree(
+    "/console/reference/api/", "Console reference",
+    "Spectre.Console — widgets, prompts, rendering, and markup types."));
+
 builder.Services.AddScoped<ApiReferenceService>();
 
 // Supplies API route discovery (so the static build emits the pages) and the sidebar
@@ -117,11 +150,7 @@ builder.Services.AddMonorailCss(_ => new MonorailCssOptions
         PrimaryColorName = ColorName.Sky,
         AccentColorName = ColorName.Amber,
         BaseColorName = ColorName.Neutral,
-        AdditionalMappings =
-        {
-            ["tertiary-one"] = ColorName.Emerald,
-            ["tertiary-two"] = ColorName.Violet,
-        },
+        AdditionalMappings = { ["tertiary-one"] = ColorName.Emerald, ["tertiary-two"] = ColorName.Violet, },
     },
 });
 

@@ -1,0 +1,4 @@
+# Metadata sidecar for the Razor landing page at "/blog/" so it projects a content record
+# and gets a social card + og:image / description meta tags.
+title: Blog
+description: "News, updates, and insights from the Spectre.Console team."

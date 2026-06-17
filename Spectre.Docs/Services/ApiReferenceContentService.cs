@@ -65,8 +65,10 @@ public sealed class ApiReferenceContentService(IServiceProvider services) : ICon
         // The default would index only the nav entries (the two index pages), so a type that
         // appears nowhere else — e.g. IAnsiConsole — is unreachable via search, and types that do
         // appear only match the big index listing rather than their own page. Add one searchable
-        // entry per type so each type page surfaces directly. Kept out of nav (SearchOnly) and out
-        // of llms.txt (ExcludeFromLlms) to avoid bloating either with the full type list.
+        // entry per type so each type page surfaces directly. Kept out of nav (SearchOnly); they
+        // still feed llms.txt, where the per-area `/{area}/reference/api/` subtree (declared via
+        // AddLlmsSubtree in Program.cs) splits them into a dedicated {prefix}llms.txt rather than
+        // bloating the front door.
         var builder = ImmutableList.CreateBuilder<ContentTocItem>();
         builder.AddRange(await GetContentTocEntriesAsync());
 
@@ -82,7 +84,7 @@ public sealed class ApiReferenceContentService(IServiceProvider services) : ICon
                     int.MaxValue,
                     [area, "reference", "api"],
                     area,
-                    null) { Description = type.Summary, SearchOnly = true, ExcludeFromLlms = true });
+                    null) { Description = type.Summary, SearchOnly = true });
             }
         }
         return builder.ToImmutable();

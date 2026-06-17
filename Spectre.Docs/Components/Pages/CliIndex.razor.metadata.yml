@@ -1,0 +1,4 @@
+# Metadata sidecar for the Razor landing page at "/cli/" so it projects a content record
+# and gets a social card + og:image / description meta tags.
+title: Spectre.Console.Cli Documentation
+description: "Build powerful command-line applications with Spectre.Console.Cli - type-safe argument parsing, nested commands, and dependency injection for .NET"
