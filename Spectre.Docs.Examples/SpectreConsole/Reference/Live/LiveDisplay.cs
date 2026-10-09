@@ -284,7 +284,7 @@ internal static class LiveDisplayExamples
 
                     await Task.Delay(1000);
 
-                    status.Rows.Update(status.Rows.Count - 1, 1, new Text("[green]Complete[/]"));
+                    status.Rows.Update(status.Rows.Count - 1, 1, new Markup("[green]Complete[/]"));
                     ctx.Refresh();
                 }
             });
